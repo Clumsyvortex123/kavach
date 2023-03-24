@@ -6,7 +6,7 @@ import face_recognition
 import os
 from csv import DictWriter
 from getpass import getpass
-from cvzone.PoseModule import PoseDetector
+from PoseModule import PoseDetector
 # shit to add later on in the code
 # add new user - get image, id and password
 # change password/ forgot password
@@ -17,18 +17,20 @@ entries=pd.DataFrame(columns=["ID","Time of Entry","Date","Entry by"])
 # entries.to_csv('Entries.csv', index=False)
 # function to entries dataframe - works
 
-def worthyEntrance(ID, choice):
-    is_choice = ""
-    if choice == "1":
-        is_choice = "face_ID"
-    else:
-        is_choice = "password"
+def worthyEntrance(ID#, choice
+):
+    # is_choice = ""
+    # if choice == "1":
+    #     is_choice = "face_ID"
+    # else:
+    #     is_choice = "password"
     today = date.today()
     now = datetime.now()
     current_time = now.strftime("%H:%M:%S")
     
     dict = {'ID': ID, 'Time of Entry': current_time, 'Date': today,
-            'Entry by': is_choice}
+            #'Entry by': is_choice
+            }
     with open('Entries.csv', 'a') as f_object:
         dictwriter_object = DictWriter(f_object, fieldnames=entries)
         dictwriter_object.writerow(dict)
@@ -84,11 +86,11 @@ def showEntries():
 
 while True:
     #User choices
-    print("What is your choice? Select: \n"+"1. inititate program\n"+"2. Check all the entries\n"+"3. Enter with password\n"+"4. Quit\n")
-    choice = input()
+    # print("What is your choice? Select: \n"+"1. inititate program\n"+"2. Check all the entries\n"+"3. Enter with password\n"+"4. Quit\n")
+    # choice = input()
     
-    if choice == "4":    
-        break
+    # if choice == "4":    
+    #     break
 
     # elif choice == "3":
     #     for i in range(3,0,-1):
@@ -106,20 +108,20 @@ while True:
     #     #else:
     #      #   restrictAccess(ID)
                 
-    elif choice == "2":
-        for i in range(3,0,-1):
-            print("Enter admin password: \n")
-            # passwordAdmin = ""
-            passwordAdmin = getpass()
-            if checkAdmin(passwordAdmin):
-                showEntries()
-                break
-            else:
-                print("You have ",i-1," tries left")
- #        else:
- #             restrictAccess()
+#     elif choice == "2":
+#         for i in range(3,0,-1):
+#             print("Enter admin password: \n")
+#             # passwordAdmin = ""
+#             passwordAdmin = getpass()
+#             if checkAdmin(passwordAdmin):
+#                 showEntries()
+#                 break
+#             else:
+#                 print("You have ",i-1," tries left")
+#  #        else:
+#  #             restrictAccess()
 
-    elif choice == "1":
+    # elif choice == "1":
 
         webcam = cv.VideoCapture(0)
         
@@ -127,6 +129,9 @@ while True:
         webcam.set(4, 480) #length
         webcam.set(10, 100) #brightness
         detector = PoseDetector()
+            
+        tempcount=0
+        frndcount = 0
         while True:
             success, img = webcam.read()
             cv.imshow("Webcam Input", img)
@@ -138,19 +143,26 @@ while True:
             faceImg = face_recognition.face_locations(img)
             encodes = face_recognition.face_encodings(img, faceImg)
             img_2 =detector.findPose(img) 
-            lmList,bbox = detector.findPosition(img_2)
-            cv.imshow("MyHumanRecogonizer",img_2)
+            lmList,bbox = detector.findPosition(img_2 ,draw = False, bboxWithHands=False)
+            img_3 = cv.resize(img_2,(600,500))
+            cv.imshow("MyHumanRecogonizer",img_3)
             areyouworthy=[]
             for encode in encodes:
                 areyouworthy = face_recognition.compare_faces(encodeList, encode)
                 
             if True in areyouworthy:
                 worthyIndex = areyouworthy.index(True)
-                worthyEntrance(worthyNames[worthyIndex], choice)
-                print("friendly")
+                worthyEntrance(worthyNames[worthyIndex]#, choice
+                )
+                frndcount = frndcount +1
+                if frndcount == 6:    
+                    print("friendly")
+                    frndcount =0
             else :
-                print("setting alert level to priority")
-
+                tempcount = tempcount+1
+                if tempcount == 20:
+                    print("setting alert")
+                    tempcount = 0
             if cv.waitKey(1) &0xFF == ord('q'):
                 break
         webcam.release()
