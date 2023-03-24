@@ -131,15 +131,19 @@ while True:
             success, img = webcam.read()
             cv.imshow("Webcam Input", img)
 
-            
+            img_2 =detector.findPose(img) 
+            lmList,bbox = detector.findPosition(img_2)
             img = cv.resize(img, (0, 0), fx=0.25, fy=0.25)
             img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
             faceImg = face_recognition.face_locations(img)
             encodes = face_recognition.face_encodings(img, faceImg)
-            img_2 = 
+            img_2 =detector.findPose(img) 
+            lmList,bbox = detector.findPosition(img_2)
+            cv.imshow("MyHumanRecogonizer",img_2)
             areyouworthy=[]
             for encode in encodes:
                 areyouworthy = face_recognition.compare_faces(encodeList, encode)
+                
             if True in areyouworthy:
                 worthyIndex = areyouworthy.index(True)
                 worthyEntrance(worthyNames[worthyIndex], choice)
