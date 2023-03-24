@@ -1,8 +1,4 @@
-"""
-Pose Module
-By: Computer Vision Zone
-Website: https://www.computervision.zone/
-"""
+
 import cv2
 import mediapipe as mp
 import math
