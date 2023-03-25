@@ -7,6 +7,7 @@ import os
 from csv import DictWriter
 from getpass import getpass
 from PoseModule import PoseDetector
+import config
 # shit to add later on in the code
 # add new user - get image, id and password
 # change password/ forgot password
@@ -37,7 +38,7 @@ def worthyEntrance(ID#, choice
         f_object.close()
 
 # Reading and training images
-worthyNames = [] # a list of names who can enter
+worthyNames = ["intruder"] # a list of names who can enter
 worthyFaces = [] # a list of images who can enter
 path = 'worthy'
 worth = os.listdir(path)
@@ -144,25 +145,38 @@ while True:
             encodes = face_recognition.face_encodings(img, faceImg)
             img_2 =detector.findPose(img) 
             lmList,bbox = detector.findPosition(img_2 ,draw = False, bboxWithHands=False)
+            
+            
+                
+                
             img_3 = cv.resize(img_2,(600,500))
             cv.imshow("MyHumanRecogonizer",img_3)
             areyouworthy=[]
             for encode in encodes:
                 areyouworthy = face_recognition.compare_faces(encodeList, encode)
-                
+            
             if True in areyouworthy:
-                worthyIndex = areyouworthy.index(True)
-                worthyEntrance(worthyNames[worthyIndex]#, choice
-                )
+                # worthyIndex = areyouworthy.index(True)
+                # worthyEntrance(worthyNames[worthyIndex]#, choice
+                #)
                 frndcount = frndcount +1
-                if frndcount == 6:    
+                if frndcount == 2:    
                     print("friendly")
                     frndcount =0
-            else :
-                tempcount = tempcount+1
-                if tempcount == 20:
-                    print("setting alert")
-                    tempcount = 0
+            else:
+                if len(lmList)== 0:
+                    var=0
+                    var= var+1
+                    if var == 6:
+                        print("area clear")
+                else:
+                    worthyIndex = 0
+                # worthyEntrance(worthyNames[worthyIndex])
+                    tempcount = tempcount+1
+                    if tempcount == 20:
+                        worthyEntrance(worthyNames[worthyIndex])
+                        print("setting alert")
+                        tempcount = 0
             if cv.waitKey(1) &0xFF == ord('q'):
                 break
         webcam.release()
