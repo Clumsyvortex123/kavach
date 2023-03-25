@@ -15,12 +15,12 @@ import config
 # change password/ forgot password
 
 def phone():
-    account_sid= 'AC8df0d9b0ac7d88d5a8aa93adbab07161'
-    auth_token = '3f17fa7e675ac8ddcdef7ad02f4e7ca9'
+    account_sid= 'AC1d0c90790dd60673881b16208378e817'
+    auth_token = '90382e721131eb6b81ef53ec1be715c2'
     client = Client(account_sid,auth_token)
-    call = client.calls.create(twiml='<Response><Say>crime alert</Say></Response>',
-                            to='+916380562917',
-                            from_='+14752674169')
+    call = client.calls.create(twiml='<Response><Say>crime alert   crime alert  crime alert</Say></Response>',
+                            to='+917010961953',
+                            from_='+14754052472')
     
 
 entries=pd.DataFrame(columns=["ID","Time of Entry","Date","Entry by"])
@@ -42,10 +42,10 @@ def worthyEntrance(ID#, choice
     current_time = now.strftime("%H:%M:%S")
     
     dict = {'ID': ID, 'Time of Entry': current_time, 'Date': today,
-            #'Entry by': is_choice
+           
             }
     with open('Entries.csv', 'a') as f_object:
-        dictwriter_object = DictWriter(f_object, fieldnames=entries)
+        dictwriter_object = DictWriter(f_object, fieldnames=entries,delimiter= "|")
         dictwriter_object.writerow(dict)
         f_object.close()
 
@@ -171,30 +171,31 @@ while True:
                 # worthyIndex = areyouworthy.index(True)
                 # worthyEntrance(worthyNames[worthyIndex]#, choice
                 #)
-                
+
                 frndcount = frndcount +1
                 if frndcount == 2:    
-                    print("friendly")
+                    print("friendly in sight.....not a trespasser.....")
                     frndcount =0
             else:
                 if len(lmList)== 0:
                     var=0
                     var= var+1
                     if var == 6:
-                        print("area clear")
+                        print("area clear ..... no activity in vision.....")
                 else:
                     worthyIndex = 0
                 # worthyEntrance(worthyNames[worthyIndex])
                     tempcount = tempcount+1
                     if tempcount == 15:
                         worthyEntrance(worthyNames[worthyIndex])
-                        print("setting alert")
+                        print("tresspassing detected....initating primary safety initatives........")
                         tempcount = 0
                         n=n+1
-                        if n>10:
-                            phone()
+                        #if n>10:
+                            #phone()
 
             if cv.waitKey(1) &0xFF == ord('q'):
                 break
         webcam.release()
         cv.destroyAllWindows()
+        
