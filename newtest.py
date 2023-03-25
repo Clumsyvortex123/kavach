@@ -4,6 +4,8 @@ from datetime import datetime
 from datetime import date
 import face_recognition
 import os
+import twilio
+from twilio.rest import Client
 from csv import DictWriter
 from getpass import getpass
 from PoseModule import PoseDetector
@@ -12,7 +14,17 @@ import config
 # add new user - get image, id and password
 # change password/ forgot password
 
+def phone():
+    account_sid= 'AC8df0d9b0ac7d88d5a8aa93adbab07161'
+    auth_token = '3f17fa7e675ac8ddcdef7ad02f4e7ca9'
+    client = Client(account_sid,auth_token)
+    call = client.calls.create(twiml='<Response><Say>crime alert</Say></Response>',
+                            to='+916380562917',
+                            from_='+14752674169')
+    
+
 entries=pd.DataFrame(columns=["ID","Time of Entry","Date","Entry by"])
+n=0
 
 
 # entries.to_csv('Entries.csv', index=False)
@@ -159,6 +171,7 @@ while True:
                 # worthyIndex = areyouworthy.index(True)
                 # worthyEntrance(worthyNames[worthyIndex]#, choice
                 #)
+                
                 frndcount = frndcount +1
                 if frndcount == 2:    
                     print("friendly")
@@ -173,10 +186,14 @@ while True:
                     worthyIndex = 0
                 # worthyEntrance(worthyNames[worthyIndex])
                     tempcount = tempcount+1
-                    if tempcount == 20:
+                    if tempcount == 15:
                         worthyEntrance(worthyNames[worthyIndex])
                         print("setting alert")
                         tempcount = 0
+                        n=n+1
+                        if n>10:
+                            phone()
+
             if cv.waitKey(1) &0xFF == ord('q'):
                 break
         webcam.release()
